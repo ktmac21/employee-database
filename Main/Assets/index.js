@@ -1,117 +1,216 @@
-const express = require('express');
-const cTable = require('console.table'); 
-const inquirer = require('inquirer'); 
-
-const app = express();
-
-console.table([
-    {
-
-    }
-])
+//Required npm packages
+const inquirer = require('inquirer');
+require('console.table');
 
 
 
-const startPrompt =
-    [
-        {
-            type: 'input',
-            name: 'main',
-            message: 'Please choose an option',
-            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 
-                        'add a role', 'add an employee', 'update an employee role']
-                    }
-    ]
+const database = require('../db/employeesDB');
 
-const addDept = 
-    [
-        {
-            type: 'input',
-            name: 'add_dept',
-            message: 'Please enter new department name',
+//Function to start the main prompt 
+function startPrompt() {
+    const startArray =
+        [
+            {
+                type: 'list',
+                name: 'main',
+                message: 'Please choose an option',
+                choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department',
+                    'Add a role', 'Add an employee', 'Update an employee role']
+            }
+        ];
+
+    inquirer.prompt(startArray).then(data => {
+
+        //If statements to handle different user options
+        if (data.main === 'View all departments') {
+            getAllDepartments();
+
+
 
         }
-    ]
-
-const add_role = 
-    [
-        {
-            type: 'input',
-            name: 'add_role_name',
-            message: 'Please enter new role name',
-        },
-
-        {
-            type: 'input',
-            name: 'add_role_salary',
-            message: 'Please enter the new role salary',
-
-        },
-    ]
-
-const addEmploy = 
-    [
-        {
-            type: 'input',
-            name: 'add_first_name',
-            message: 'Please enter employee first name',
-        },
-
-        {
-            type: 'input',
-            name: 'add_last_name',
-            message: 'Please enter employee last name',
-
-        },
-
-        {
-            type: 'input',
-            name: 'add_employ_salary',
-            message: 'Please enter employee salary',
-        },
-
-        {
-            type: 'input',
-            name: 'add_manager',
-            message: 'Please enter employee manager',
-        },
-
-    ]
-
-const updatePrompt = 
-    [
-        {
-            type: 'input',
-            name: 'update_prompt',
-            message: 'Please select an employee to update',
-            choices: ['existing database?'],
+        else if (data.main === 'View all roles') {
+            getAllRoles();
         }
-    ]
-
-const updateRole = 
-    [
-        {
-            type: 'input',
-            name: 'update_role',
-            message: 'Please enter employee new role',
-        },
-
-        {
-            type: 'input',
-            name: 'update_salary',
-            message: 'Please enter new salary',
+        else if (data.main === 'View all employees') {
+            getAllEmployees();
         }
-    ]
 
-    function init() {
-        inquirer.prompt(startPrompt)
-            .then(function (data) {
-                console.log(data)
-                writeToFile("README.md", generateTables(data));
-                console.log(data)
+        else if (data.main === 'Add a department') {
+            addDeptPrompt();
+
+        }
+
+        else if (data.main === 'Add a role') {
+            addRolePrompt();
+
+        }
+
+        else if (data.main === 'Add an employee') {
+            addEmployPrompt();
+
+        }
+
+        else if (data.main === 'update an employee role') {
+            updatedRolePrompt();
+
+        }
+    });
+}
+
+function getAllDepartments() {
+    database.selectAllDepartments().then(data => {
+        // console.log(data[0]);
+        console.table(data[0]);
+    })
+        .then(() => {
+            return startPrompt();
+        })
+}
+
+function getAllRoles() {
+    database.selectAllRoles().then(data => {
+        // console.log(data[0]);
+        console.table(data[0]);
+    })
+
+        .then(() => {
+            return startPrompt();
+        })
+}
+
+function getAllEmployees() {
+    database.selectAllEmployees().then(data => {
+        // console.log(data[0]);
+        console.table(data[0]);
+    })
+
+        .then(() => {
+            return startPrompt();
+        })
+}
+//Function to display applicable questions if user wants to add a new department       
+function addDeptPrompt() {
+    const addDepartArray =
+        [
+            {
+                type: 'input',
+                name: 'name',
+                message: 'Please enter new department name',
+
+            }
+        ]
+    inquirer.prompt(addDepartArray).then(data => {
+        database.addDepartment(data.name).then(() => {
+            console.log('Successfully added!')
+        })
+            .then(() => {
+                return startPrompt();
             })
-    }
-    
-    // Function call to initialize app
-    init();
-    
+    });
+}
+//Function to display applicable questions if user wants to add a new role
+function addRolePrompt() {
+    const addRoleArray =
+        [
+            {
+                type: 'input',
+                name: 'title',
+                message: 'Please enter new role name',
+            },
+
+            {
+                type: 'input',
+                name: 'salary',
+                message: 'Please enter the new role salary',
+
+            },
+        ]
+    inquirer.prompt(addRoleArray).then(data => {
+        database.addRole(data.title, data.salary, data.department_id).then(() => {
+            console.log('Successfully added!')
+        })
+            .then(() => {
+                return startPrompt();
+            })
+    });
+}
+//Function to display applicable questions if user wants to add a new employee
+function addEmployPrompt() {
+    const addEmployArray =
+        [
+            {
+                type: 'input',
+                name: 'first_name',
+                message: 'Please enter employee first name',
+            },
+
+            {
+                type: 'input',
+                name: 'last_name',
+                message: 'Please enter employee last name',
+
+            },
+
+            {
+                type: 'input',
+                name: 'role_id',
+                message: 'Please enter role id',
+            },
+
+            {
+                type: 'input',
+                name: 'manager_id',
+                message: 'Please enter manager id',
+            },
+
+        ]
+
+        inquirer.prompt(addEmployArray).then(data => {
+            database.addEmployee(data.first_name, data.last_name, data.role_id, data.manager_id).then(() => {
+                console.log('Successfully added!')
+            })
+        .then(() => {
+            return startPrompt();
+        })
+    });
+}
+
+//Function to display list of employees that user may want to update
+function updatedRolePrompt() {
+    const updateRolePromptArray =
+        [
+            {
+                type: 'list',
+                name: 'update_prompt',
+                message: 'Please select an employee to update',
+                choices: ['existing employee table?'],
+            }
+        ]
+
+    inquirer.prompt(updateRolePromptArray).then(data => {
+        updateRole(data);
+    });
+}
+
+//Function to display applicable questions if user wants to update an employee role and salary
+function updateRole() {
+    const updateRoleArray =
+        [
+            {
+                type: 'input',
+                name: 'update_role',
+                message: 'Please enter employee new role',
+            },
+
+            {
+                type: 'input',
+                name: 'update_salary',
+                message: 'Please enter new salary',
+            }
+        ]
+
+    inquirer.prompt(updateRoleArray).then(data => {
+        updateEmployeeRole(data);
+    });
+}
+startPrompt();

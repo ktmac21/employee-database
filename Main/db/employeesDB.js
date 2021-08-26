@@ -1,5 +1,7 @@
+//Required from connection.js file
 const connection = require("./connection");
 
+//Class for entire database connection
 class EmployeesDatabase {
     constructor(connection) {
         this.connection = connection;
@@ -31,17 +33,22 @@ class EmployeesDatabase {
     }
 
     addDepartment(name) {
-        return this.connection.promise().query("INSERT INTO department(name) VALUES (?)", name)
+        return this.connection.promise().query("INSERT INTO department (name) VALUES (?)", name)
     }
 
     addRole(title, salary, department_id) {
-        return this.connection.promise().query("INSERT INTO role (title, salary, department_id) VALUES (? ? ?)", 
+        return this.connection.promise().query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", 
         [title, salary, department_id])
     }
 
-    addEmployee(first_name, last_name, role_id) {
-        return this.connection.promise().query("INSERT INTO employee(first_name, last_name, role_id) VALUES(?, ?)", 
-        [first_name, last_name, role_id])
+    addEmployee(first_name, last_name, role_id, manager_id) {
+        return this.connection.promise().query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?, ?, ?, ?)", 
+        [first_name, last_name, role_id, manager_id])
+    }
+
+    updateEmployeeRole(title, salary, department) {
+        return this.connection.promise().query("UPDATE role SET(title, salary) WHERE id = ?)",
+        [title, salary])
     }
 }
 

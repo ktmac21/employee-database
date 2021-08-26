@@ -1,5 +1,6 @@
+//Required file
 const express = require('express');
-const sequelize = require('./db/connection');
+const connection = require('./db/connection');
 const employeesDatabase = require('./db/employeesDB');
 
 
@@ -10,6 +11,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+//API Routes 
 app.get("/api/department", (req, res) => {
     employeesDatabase.selectAllDepartments().then(([rows]) => {
         console.log(rows);
@@ -82,18 +84,28 @@ app.post("/api/add-role", (req, res) => {
 })
 
 app.post("/api/add-employee", (req, res) => {
-    const { first_name, last_name, role_id  } = req.body
+    const { first_name, last_name, role_id, manager_id  } = req.body
 
-    employeesDatabase.addEmployee(first_name, last_name, role_id).then((data) => {
+    employeesDatabase.addEmployee(first_name, last_name, role_id, manager_id).then((data) => {
         if (data[0].affectedRows) {
             res.json(`${first_name} has been added to the database`)
         }
     });
 })
 
+app.put("/api/update-employee-role", (req, res) => {
+    const { title, salary } = req.body
+
+    employeesDatabase.updateEmployeeRole(title, salary).then((data) => {
+        if (data[0].affectedRows) {
+            res.json('Employee role has been updated in the database')
+        }
+    });
+})
 
 
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+//Listening on port
+connection.sync({ force: true }).then(() => {
+    app.listen(PORT, () => console.log('Now listening'));
+  });
+  
