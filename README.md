@@ -35,7 +35,7 @@ SO THAT I can organize and plan my business
 
 ## Walk thru video Link
 
-https://youtu.be/c-t3mFiS6TQ
+https://youtu.be/3IiqgT1UtHA
 
 
 
