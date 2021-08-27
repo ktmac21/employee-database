@@ -11,12 +11,12 @@ SO THAT I can organize and plan my business
 
 # TECH USED:
 
-Inquirer
-MySQL
-npm package console.table
-npm package dotenv
-Javascript
-Node.js
+1. Inquirer
+2. MySQL
+3. npm package console.table
+4. npm package dotenv
+5. Javascript
+6. Node.js
 
 # Installation
 
@@ -33,8 +33,9 @@ Node.js
 6. make sure to run .sql file in mySQL workbench before running server.js so that tables are able to render correctly
 7. run node index.js
 
-# Walk thru video Link
+## Walk thru video Link
 
+https://youtu.be/c-t3mFiS6TQ
 
 
 
