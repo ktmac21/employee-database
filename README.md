@@ -1,6 +1,6 @@
 # Employee Database
 
-This week's assignment is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL. When the application is started the user is presented with a list of options to view, add or update employee information. When the user selects the view option, tables are presented of applicable information. When the user chooses add or update, the database is updated. 
+This week's assignment is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL. When the application is started the user is presented with a list of options to view, add or update employee information. When the user selects the view option tables are presented with applicable information. When the user chooses add or update the database is updated. 
 
 # USER STORY:
 
