@@ -1,9 +1,6 @@
 //Required npm packages
 const inquirer = require('inquirer');
 require('console.table');
-
-
-
 const database = require('../db/employeesDB');
 
 //Function to start the main prompt 
@@ -183,7 +180,15 @@ function updatedRolePrompt() {
                 type: 'list',
                 name: 'update_prompt',
                 message: 'Please select an employee to update',
-                choices: ['existing employee table?'],
+                choices: () => {
+                    const employees = [];
+                    res.filter(emp => {
+                        if (typeof emp.employee === 'string') {
+                            employees.push(emp.employees);
+                        }
+                    });
+                    return employees;
+                }
             }
         ]
 
